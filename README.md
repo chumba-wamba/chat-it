@@ -3,7 +3,7 @@ A realtime chat application with end-to-end encryption developed as a part of my
 
 ## Usage
 
-Add your mongoDB URI and Google OAuth credentials to the config.env file
+Add your mongoDB URI and PORT to the config.env file
 
 ``` bash
 # Install dependencies
