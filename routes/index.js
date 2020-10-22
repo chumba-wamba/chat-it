@@ -5,6 +5,10 @@ const {
 } = require("../middleware/auth_middleware");
 router = express.Router();
 
+router.get("/", checkNotAuthenticated, (req, res, next) => {
+  res.redirect("/auth/login");
+});
+
 router.get("/dashboard", checkAuthenticated, (req, res, next) => {
   console.log(req.user);
   res.render("dashboard.hbs", { firstName: req.user.firstName });
