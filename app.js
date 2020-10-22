@@ -9,6 +9,7 @@ const dotenv = require("dotenv");
 const passport = require("passport");
 const morgan = require("morgan");
 const MongoStore = require("connect-mongo")(session);
+const { ifEquals } = require("./helpers/handlebars");
 
 const connectDB = require("./config/database");
 const User = require("./models/User");
@@ -49,7 +50,7 @@ if (NODE_ENV === "development") {
 app.engine(
   ".hbs",
   exphbs({
-    helpers: {},
+    helpers: { ifEquals },
     defaultLayout: "main.hbs",
     extname: ".hbs",
   })

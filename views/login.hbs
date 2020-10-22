@@ -1,13 +1,14 @@
-<form class="col s12" action="/auth/login" method="post">
+<form class="col s12" id="form" action="/auth/login" method="post">
     <div class="row">
         <div class="input-field col s12">
-            <input id="userName" type="text" name="userName" class="validate">
+            <input id="userName" type="text" name="userName" class="validate" required>
             <label for="userName">Username</label>
+            <p id="userNameError"></p>
         </div>
     </div>
     <div class="row">
         <div class="input-field col s12">
-            <input id="password" type="password" name="password" class="validate">
+            <input id="password" type="password" name="password" class="validate" required>
             <label for="password">Password</label>
         </div>
     </div>

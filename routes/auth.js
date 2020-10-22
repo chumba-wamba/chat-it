@@ -13,7 +13,7 @@ router.get("/", checkAuthenticated, (req, res, next) => {
 });
 
 router.get("/register", (req, res, next) => {
-  res.render("register", { layout: "auth" });
+  res.render("register", { layout: "auth", scriptType: "register" });
 });
 
 router.post("/register", checkNotAuthenticated, async (req, res) => {
@@ -35,7 +35,7 @@ router.post("/register", checkNotAuthenticated, async (req, res) => {
 });
 
 router.get("/login", checkNotAuthenticated, (req, res, next) => {
-  res.render("login", { layout: "auth" });
+  res.render("login", { layout: "auth", scriptType: "login" });
 });
 
 router.post(
