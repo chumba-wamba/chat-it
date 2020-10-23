@@ -29,10 +29,10 @@
             plugins: 'wysiwygarea, toolbar, basicstyles, link'
         })
     </script>
-    {{#if (ifEquals scriptType "login")}}
+    {{#if (ifEquals scriptFileName "login")}}
     <script src="../../js/login_val.js"></script>
     {{/if}}
-    {{#if (ifEquals scriptType "register")}}
+    {{#if (ifEquals scriptFileName "register")}}
     <script src="../../js/register_val.js"></script>
     {{/if}}
 </body>
