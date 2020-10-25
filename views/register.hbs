@@ -1,26 +1,35 @@
 <form class="col s12" id="form" action="/auth/register" method="post">
     <div class="row">
         <div class="input-field col s6">
-            <input id="firstName" type="text" name="firstName" class="validate" required>
+            <input id="firstName" type="text" name="firstName" class="validate" required maxlength="20">
             <label for="firstName">First Name</label>
         </div>
         <div class="input-field col s6">
-            <input id="lastName" type="text" name="lastName" class="validate" required>
+            <input id="lastName" type="text" name="lastName" class="validate" required maxlength="20">
             <label for="lastName">Last Name</label>
         </div>
     </div>
     <div class="row">
         <div class="input-field col s12">
-            <input id="userName" type="text" name="userName" class="validate" required>
+            <input id="userName" type="text" name="userName" class="validate" required minlength="6" maxlength="20">
             <label for="userName">Username</label>
-            <p id="userNameError"></p>
+            {{#if errors.userName}}
+            <p>{{errors.userName.msg}}</p>
+            {{/if}}
         </div>
     </div>
     <div class="row">
         <div class="input-field col s12">
-            <input id="password" type="password" name="password" class="validate" required>
+            <input id="password" type="password" name="password" class="validate" required minlength="6" maxlength="20">
             <label for="password">Password</label>
             <p id="passwordError"></p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field col s12">
+            <input id="confirmPassword" type="password" name="confirmPassword" class="validate" required minlength="6"
+                maxlength="20">
+            <label for="confirmPassword">Confirm Password</label>
         </div>
     </div>
     <input type="submit" value="Register" class="btn">

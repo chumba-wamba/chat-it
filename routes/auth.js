@@ -1,6 +1,7 @@
 const express = require("express");
 const passport = require("passport");
 const bcrypt = require("bcrypt");
+const { body, validationResult } = require("express-validator");
 const User = require("../models/User");
 const {
   checkAuthenticated,
@@ -16,27 +17,62 @@ router.get("/register", (req, res, next) => {
   res.render("register", { layout: "auth", scriptFileName: "register" });
 });
 
-router.post("/register", checkNotAuthenticated, async (req, res) => {
-  try {
-    console.log(req.body);
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    newUser = {
-      userName: req.body.userName,
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      password: hashedPassword,
-    };
-    await User.create(newUser);
-    console.log("user successfully created!");
-    res.redirect("/auth/login");
-  } catch {
-    res.redirect("/auth/register");
-  }
-});
+router.post(
+  "/register",
+  [
+    body("userName")
+      .isLength({ min: 6, max: 20 })
+      .custom((value) => {
+        return User.findOne({ userName: value }).then((user) => {
+          if (user) {
+            return Promise.reject("Username already in use 😭.");
+          }
+        });
+      }),
+    body("firstName").isLength({ max: 20 }),
+    body("lastName").isLength({ max: 20 }),
+    body("password").isLength({ min: 6, max: 20 }),
+  ],
+  checkNotAuthenticated,
+  async (req, res) => {
+    const errors = validationResult(req);
 
-router.get("/login", checkNotAuthenticated, (req, res, next) => {
-  res.render("login", { layout: "auth", scriptFileName: "login" });
-});
+    if (!errors.isEmpty()) {
+      return res.render("register", {
+        layout: "auth",
+        errors: errors.mapped(),
+      });
+    }
+
+    try {
+      console.log("Registration successful 🙂!");
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+      newUser = {
+        userName: req.body.userName,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        password: hashedPassword,
+      };
+      await User.create(newUser);
+      console.log("user successfully created!");
+      res.redirect("/auth/login");
+    } catch {
+      res.redirect("/auth/register");
+    }
+  }
+);
+
+router.get(
+  "/login",
+  [
+    body("userName").isLength({ min: 6, max: 20 }),
+    body("password").isLength({ min: 6, max: 20 }),
+  ],
+  checkNotAuthenticated,
+  (req, res, next) => {
+    res.render("login", { layout: "auth" });
+  }
+);
 
 router.post(
   "/login",

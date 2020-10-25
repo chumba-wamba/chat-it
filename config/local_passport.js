@@ -5,7 +5,6 @@ const User = require("../models/User");
 function initialize(passport) {
   const authenticateUser = async (userName, password, done) => {
     const user = await User.findOne({ userName: userName });
-    console.log(user);
     if (user == null) {
       return done(null, false, { message: "no user with that username" });
     }

@@ -25,13 +25,7 @@
     <script>
         M.Sidenav.init(document.querySelector('.sidenav'))
         M.FormSelect.init(document.querySelector('#status'))
-        CKEDITOR.replace('body', {
-            plugins: 'wysiwygarea, toolbar, basicstyles, link'
-        })
     </script>
-    {{#if (ifEquals scriptFileName "login")}}
-    <script src="../../js/login_val.js"></script>
-    {{/if}}
     {{#if (ifEquals scriptFileName "register")}}
     <script src="../../js/register_val.js"></script>
     {{/if}}
