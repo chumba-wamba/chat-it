@@ -1,5 +1,6 @@
 const path = require("path");
 const fs = require("fs");
+const http = require("http");
 const https = require("https");
 const express = require("express");
 const session = require("express-session");
@@ -8,6 +9,8 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const passport = require("passport");
 const morgan = require("morgan");
+var io = require("socket.io");
+const chatBoilerplate = require("./chat");
 const MongoStore = require("connect-mongo")(session);
 const { ifEquals } = require("./helpers/handlebars");
 
@@ -80,16 +83,27 @@ app.use("/", require("./routes/index.js"));
 // adding routes for "/auth/..." endpoints
 app.use("/auth", require("./routes/auth.js"));
 
-const sslServer = https.createServer(
-  {
-    key: fs.readFileSync(path.join(__dirname, "cert", "key.pem")),
-    cert: fs.readFileSync(path.join(__dirname, "cert", "cert.pem")),
-  },
-  app
-);
+// initialising secure production server
+if (NODE_ENV === "development") {
+  console.log("creating http development server");
+  server = http.createServer(app);
+} else {
+  console.log("creating secure (https) production server");
+  server = https.createServer(
+    {
+      key: fs.readFileSync(path.join(__dirname, "cert", "key.pem")),
+      cert: fs.readFileSync(path.join(__dirname, "cert", "cert.pem")),
+    },
+    app
+  );
+}
+
+// initialising socket io server
+io = io(server);
+chatBoilerplate(io);
 
 // initialising express app to listen to
 // any incoming requests
-app.listen(PORT, (req, res) => {
+server.listen(PORT, "0.0.0.0", (req, res) => {
   console.log(`server running in ${NODE_ENV} at port: ${PORT}`);
 });

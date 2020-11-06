@@ -45,7 +45,6 @@ router.post(
     }
 
     try {
-      console.log("Registration successful 🙂!");
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
       newUser = {
         userName: req.body.userName,
@@ -54,6 +53,7 @@ router.post(
         password: hashedPassword,
       };
       await User.create(newUser);
+      console.log(`Registration successful for ${req.body.userName}! 🙂`);
       console.log("user successfully created!");
       res.redirect("/auth/login");
     } catch {
