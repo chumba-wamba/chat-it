@@ -10,7 +10,6 @@ const dotenv = require("dotenv");
 const passport = require("passport");
 const morgan = require("morgan");
 var io = require("socket.io");
-const chatBoilerplate = require("./chat");
 const MongoStore = require("connect-mongo")(session);
 const { ifEquals } = require("./helpers/handlebars");
 
@@ -37,9 +36,27 @@ connectDB();
 // initialising an express app
 app = express();
 
+// chosing http vs https server based on
+// whether the app is running in production or
+// development
+if (NODE_ENV === "development") {
+  console.log("creating http development server");
+  server = http.createServer(app);
+} else {
+  console.log("creating secure (https) production server");
+  server = https.createServer(
+    {
+      key: fs.readFileSync(path.join(__dirname, "cert", "key.pem")),
+      cert: fs.readFileSync(path.join(__dirname, "cert", "cert.pem")),
+    },
+    app
+  );
+}
+
+// initialising socket io server
+io = io(server);
+
 // adding body parser middleware
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
@@ -83,24 +100,8 @@ app.use("/", require("./routes/index.js"));
 // adding routes for "/auth/..." endpoints
 app.use("/auth", require("./routes/auth.js"));
 
-// initialising secure production server
-if (NODE_ENV === "development") {
-  console.log("creating http development server");
-  server = http.createServer(app);
-} else {
-  console.log("creating secure (https) production server");
-  server = https.createServer(
-    {
-      key: fs.readFileSync(path.join(__dirname, "cert", "key.pem")),
-      cert: fs.readFileSync(path.join(__dirname, "cert", "cert.pem")),
-    },
-    app
-  );
-}
-
-// initialising socket io server
-io = io(server);
-chatBoilerplate(io);
+// adding routes for "/chat/..." endpoints
+app.use("/chat", require("./routes/chat.js"));
 
 // initialising express app to listen to
 // any incoming requests

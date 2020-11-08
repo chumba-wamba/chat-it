@@ -10,7 +10,10 @@ router.get("/", checkNotAuthenticated, (req, res, next) => {
 });
 
 router.get("/dashboard", checkAuthenticated, (req, res, next) => {
-  res.render("dashboard.hbs", { firstName: req.user.firstName });
+  res.render("dashboard.hbs", {
+    firstName: req.user.firstName,
+    fileName: "dashboard",
+  });
 });
 
 module.exports = router;
