@@ -6,6 +6,7 @@ const {
   checkAuthenticated,
   checkNotAuthenticated,
 } = require("../middleware/auth_middleware");
+const { generateId } = require("../helpers/utils");
 router = express.Router();
 
 router.get("/", checkAuthenticated, async (req, res, next) => {
@@ -30,8 +31,26 @@ router.post(
     const errors = validationResult(req);
     if (req.body.userName === req.user.userName) {
       errors.errors.push({
-        value: "asvsasdvsd",
+        value: req.body.userName,
         msg: "Damn son, you must be lonely!",
+        param: "userName",
+        location: "body",
+      });
+    }
+
+    if (
+      (await Room.findOne({
+        userOne: req.body.userName,
+        userTwo: req.user.userName,
+      })) ||
+      (await Room.findOne({
+        userTwo: req.body.userName,
+        userOne: req.user.userName,
+      }))
+    ) {
+      errors.errors.push({
+        value: req.body.userName,
+        msg: "Y'all already friends, buddy!",
         param: "userName",
         location: "body",
       });
@@ -43,7 +62,19 @@ router.post(
       });
     }
 
-    userName = req.body.userName;
+    roomId = generateId();
+    while (await Room.findOne({ room: roomId })) {
+      roomId = generateId();
+    }
+    newRoom = {
+      userOne: req.user.userName,
+      userTwo: req.body.userName,
+      room: roomId,
+    };
+    await Room.create(newRoom);
+    console.log(
+      `new friendship - ${req.user.userName} 🤝 ${req.body.userName}`
+    );
 
     res.redirect("/dashboard");
   }
