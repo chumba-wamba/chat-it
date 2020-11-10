@@ -1,0 +1,19 @@
+<div class="container login-container">
+    <div class="card">
+        <div class="card-content">
+            <form class="col s12" id="form" action="/friends/add" method="post">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="userName" type="text" name="userName" class="validate" required minlength="6"
+                            maxlength="20">
+                        <label for="userName">Username</label>
+                        {{#if errors.userName}}
+                        <p>{{errors.userName.msg}}</p>
+                        {{/if}}
+                    </div>
+                </div>
+                <input type="submit" value="Add" class="btn">
+            </form>
+        </div>
+    </div>
+</div>

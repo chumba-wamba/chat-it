@@ -9,6 +9,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const passport = require("passport");
 const morgan = require("morgan");
+const { socketServer } = require("./io_chat");
 var io = require("socket.io");
 const MongoStore = require("connect-mongo")(session);
 const { ifEquals } = require("./helpers/handlebars");
@@ -102,6 +103,12 @@ app.use("/auth", require("./routes/auth.js"));
 
 // adding routes for "/chat/..." endpoints
 app.use("/chat", require("./routes/chat.js"));
+
+// adding routes for "/friends/..." endpoints
+app.use("/friends", require("./routes/friends.js"));
+
+// socket.io server
+socketServer(io);
 
 // initialising express app to listen to
 // any incoming requests
