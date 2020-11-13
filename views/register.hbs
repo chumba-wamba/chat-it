@@ -14,7 +14,7 @@
             <input id="userName" type="text" name="userName" class="validate" required minlength="6" maxlength="20">
             <label for="userName">Username</label>
             {{#if errors.userName}}
-            <p>{{errors.userName.msg}}</p>
+            <p class="error-alert">{{errors.userName.msg}}</p>
             {{/if}}
         </div>
     </div>
@@ -22,7 +22,7 @@
         <div class="input-field col s12">
             <input id="password" type="password" name="password" class="validate" required minlength="6" maxlength="20">
             <label for="password">Password</label>
-            <p id="passwordError"></p>
+            <p class="error-alert" id="passwordError"></p>
         </div>
     </div>
     <div class="row">

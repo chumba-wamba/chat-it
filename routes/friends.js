@@ -80,4 +80,7 @@ router.post(
   }
 );
 
+// To Do - Add deletion functionality
+router.post("/delete", () => {});
+
 module.exports = router;
