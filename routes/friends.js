@@ -28,55 +28,60 @@ router.post(
   ],
   checkAuthenticated,
   async (req, res, next) => {
-    const errors = validationResult(req);
-    if (req.body.userName === req.user.userName) {
-      errors.errors.push({
-        value: req.body.userName,
-        msg: "Damn son, you must be lonely!",
-        param: "userName",
-        location: "body",
-      });
-    }
+    try {
+      const errors = validationResult(req);
+      if (req.body.userName === req.user.userName) {
+        errors.errors.push({
+          value: req.body.userName,
+          msg: "Damn son, you must be lonely!",
+          param: "userName",
+          location: "body",
+        });
+      }
 
-    if (
-      (await Room.findOne({
-        userOne: req.body.userName,
-        userTwo: req.user.userName,
-      })) ||
-      (await Room.findOne({
-        userTwo: req.body.userName,
-        userOne: req.user.userName,
-      }))
-    ) {
-      errors.errors.push({
-        value: req.body.userName,
-        msg: "Y'all already friends, buddy!",
-        param: "userName",
-        location: "body",
-      });
-    }
+      if (
+        (await Room.findOne({
+          userOne: req.body.userName,
+          userTwo: req.user.userName,
+        })) ||
+        (await Room.findOne({
+          userTwo: req.body.userName,
+          userOne: req.user.userName,
+        }))
+      ) {
+        errors.errors.push({
+          value: req.body.userName,
+          msg: "Y'all already friends, buddy!",
+          param: "userName",
+          location: "body",
+        });
+      }
 
-    if (!errors.isEmpty()) {
-      return res.render("add_friends", {
-        errors: errors.mapped(),
-      });
-    }
+      if (!errors.isEmpty()) {
+        return res.render("add_friends", {
+          errors: errors.mapped(),
+        });
+      }
 
-    roomId = generateId();
-    while (await Room.findOne({ room: roomId })) {
       roomId = generateId();
-    }
-    newRoom = {
-      userOne: req.user.userName,
-      userTwo: req.body.userName,
-      room: roomId,
-    };
-    await Room.create(newRoom);
-    console.log(
-      `new friendship - ${req.user.userName} 🤝 ${req.body.userName}`
-    );
+      while (await Room.findOne({ room: roomId })) {
+        roomId = generateId();
+      }
+      newRoom = {
+        userOne: req.user.userName,
+        userTwo: req.body.userName,
+        room: roomId,
+      };
+      await Room.create(newRoom);
+      console.log(
+        `new friendship - ${req.user.userName} 🤝 ${req.body.userName}`
+      );
 
-    res.redirect("/dashboard");
+      res.redirect("/dashboard");
+    } catch (error) {
+      console.log(error);
+      res.render("error/500.hbs");
+    }
   }
 );
 

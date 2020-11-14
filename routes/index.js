@@ -13,36 +13,41 @@ router.get("/", checkNotAuthenticated, (req, res, next) => {
 });
 
 router.get("/dashboard", checkAuthenticated, async (req, res, next) => {
-  user = await User.findOne({ userName: req.user.userName }).lean();
+  try {
+    user = await User.findOne({ userName: req.user.userName }).lean();
 
-  rooms = await Room.find({
-    $or: [{ userOne: req.user.userName }, { userTwo: req.user.userName }],
-  }).lean();
+    rooms = await Room.find({
+      $or: [{ userOne: req.user.userName }, { userTwo: req.user.userName }],
+    }).lean();
 
-  friends = [];
-  for (var i = 0; i < rooms.length; i++) {
-    if (rooms[i].userOne === user.userName) {
-      friend = {
-        userName: rooms[i].userTwo,
-        room: rooms[i].room,
-      };
-    } else {
-      friend = {
-        userName: rooms[i].userOne,
-        room: rooms[i].room,
-      };
+    friends = [];
+    for (var i = 0; i < rooms.length; i++) {
+      if (rooms[i].userOne === user.userName) {
+        friend = {
+          userName: rooms[i].userTwo,
+          room: rooms[i].room,
+        };
+      } else {
+        friend = {
+          userName: rooms[i].userOne,
+          room: rooms[i].room,
+        };
+      }
+      friends.push(friend);
     }
-    friends.push(friend);
-  }
-  friends.sort((a, b) =>
-    a.userName > b.userName ? 1 : b.userName > a.userName ? -1 : 0
-  );
+    friends.sort((a, b) =>
+      a.userName > b.userName ? 1 : b.userName > a.userName ? -1 : 0
+    );
 
-  res.render("dashboard.hbs", {
-    user,
-    friends: friends,
-    fileName: "dashboard",
-  });
+    res.render("dashboard.hbs", {
+      user,
+      friends: friends,
+      fileName: "dashboard",
+    });
+  } catch (error) {
+    console.log(error);
+    res.render("error/500.hbs");
+  }
 });
 
 module.exports = router;
