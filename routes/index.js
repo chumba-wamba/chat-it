@@ -25,12 +25,12 @@ router.get("/dashboard", checkAuthenticated, async (req, res, next) => {
       if (rooms[i].userOne === user.userName) {
         friend = {
           userName: rooms[i].userTwo,
-          room: rooms[i].room,
+          roomId: rooms[i].roomId,
         };
       } else {
         friend = {
           userName: rooms[i].userOne,
-          room: rooms[i].room,
+          roomId: rooms[i].roomId,
         };
       }
       friends.push(friend);

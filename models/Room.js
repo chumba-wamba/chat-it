@@ -9,7 +9,7 @@ const RoomSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  room: {
+  roomId: {
     type: String,
     required: true,
     unique: true,

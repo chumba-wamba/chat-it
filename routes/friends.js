@@ -64,13 +64,13 @@ router.post(
       }
 
       roomId = generateId();
-      while (await Room.findOne({ room: roomId })) {
+      while (await Room.findOne({ roomId: roomId })) {
         roomId = generateId();
       }
       newRoom = {
         userOne: req.user.userName,
         userTwo: req.body.userName,
-        room: roomId,
+        roomId: roomId,
       };
       await Room.create(newRoom);
       console.log(
@@ -86,6 +86,30 @@ router.post(
 );
 
 // To Do - Add deletion functionality
-router.post("/delete", () => {});
+router.get("/delete/:roomId", async (req, res) => {
+  try {
+    roomId = req.params.roomId;
+    room = await Room.findOne({ roomId: roomId });
+    console.log(roomId);
+
+    if (!room) {
+      console.log("here");
+      res.render("error/404.hbs");
+    }
+
+    if (
+      room.userOne === req.user.userName ||
+      room.userTwo === req.user.userName
+    ) {
+      await Room.deleteOne({ roomId: roomId });
+      console.log(`friendship cancel - ${room.userOne} 🤝 ${room.userTwo}`);
+      res.redirect("/dashboard");
+    } else {
+      res.render("error/404.hbs");
+    }
+  } catch (error) {
+    res.render("error/500.hbs");
+  }
+});
 
 module.exports = router;
