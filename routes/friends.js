@@ -77,6 +77,7 @@ router.post(
         `new friendship - ${req.user.userName} 🤝 ${req.body.userName}`
       );
 
+      req.flash("info", `Added friend: ${req.body.userName}`);
       res.redirect("/dashboard");
     } catch (error) {
       console.log(error);

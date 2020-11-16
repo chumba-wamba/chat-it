@@ -43,6 +43,7 @@ router.get("/dashboard", checkAuthenticated, async (req, res, next) => {
       user,
       friends: friends,
       fileName: "dashboard",
+      message: req.flash("info"),
     });
   } catch (error) {
     console.log(error);

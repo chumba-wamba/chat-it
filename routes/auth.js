@@ -56,7 +56,10 @@ router.post(
       await User.create(newUser);
       console.log(`Registration successful for ${req.body.userName}! 🙂`);
 
-      req.flash("info", "User successfully created!");
+      req.flash(
+        "info",
+        `User successfully created for ${req.body.userName}; please login to continue!`
+      );
       res.redirect("/auth/login");
     } catch {
       res.redirect("/auth/register");

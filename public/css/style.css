@@ -24,3 +24,8 @@ p {
 .error-alert {
   color: #cc0000;
 }
+
+.flash-success {
+  font-size: 20px;
+  text-align: center;
+}
