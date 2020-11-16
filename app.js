@@ -9,6 +9,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const passport = require("passport");
 const morgan = require("morgan");
+const flash = require("connect-flash");
 const { socketServer } = require("./io_chat");
 var io = require("socket.io");
 const MongoStore = require("connect-mongo")(session);
@@ -87,6 +88,9 @@ app.use(
     store: new MongoStore({ mongooseConnection: mongoose.connection }),
   })
 );
+
+// adding middleware for message flashing
+app.use(flash());
 
 // adding middleware for passport
 app.use(passport.initialize());

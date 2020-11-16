@@ -1,6 +1,7 @@
 const express = require("express");
 const passport = require("passport");
 const bcrypt = require("bcrypt");
+const flash = require("connect-flash");
 const { body, validationResult } = require("express-validator");
 const User = require("../models/User");
 const {
@@ -54,7 +55,8 @@ router.post(
       };
       await User.create(newUser);
       console.log(`Registration successful for ${req.body.userName}! 🙂`);
-      console.log("user successfully created!");
+
+      req.flash("info", "User successfully created!");
       res.redirect("/auth/login");
     } catch {
       res.redirect("/auth/register");
@@ -70,7 +72,11 @@ router.get(
   ],
   checkNotAuthenticated,
   (req, res, next) => {
-    res.render("login", { layout: "auth", fileName: "login" });
+    res.render("login", {
+      layout: "auth",
+      fileName: "login",
+      message: req.flash("info"),
+    });
   }
 );
 

@@ -85,8 +85,7 @@ router.post(
   }
 );
 
-// To Do - Add deletion functionality
-router.get("/delete/:roomId", async (req, res) => {
+router.get("/delete/:roomId", checkAuthenticated, async (req, res) => {
   try {
     roomId = req.params.roomId;
     room = await Room.findOne({ roomId: roomId });
@@ -102,7 +101,7 @@ router.get("/delete/:roomId", async (req, res) => {
       room.userTwo === req.user.userName
     ) {
       await Room.deleteOne({ roomId: roomId });
-      console.log(`friendship cancel - ${room.userOne} 🤝 ${room.userTwo}`);
+      console.log(`friendship cancel - ${room.userOne} 💔 ${room.userTwo}`);
       res.redirect("/dashboard");
     } else {
       res.render("error/404.hbs");
