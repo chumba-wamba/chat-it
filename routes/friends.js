@@ -10,7 +10,10 @@ const { generateId } = require("../helpers/utils");
 router = express.Router();
 
 router.get("/", checkAuthenticated, async (req, res, next) => {
-  res.render("add_friends.hbs", { fileName: "addFriends" });
+  res.render("add_friends.hbs", {
+    fileName: "addFriends",
+    message: req.flash("info"),
+  });
 });
 
 router.post(
@@ -78,7 +81,7 @@ router.post(
       );
 
       req.flash("info", `Added friend: ${req.body.userName}`);
-      res.redirect("/dashboard");
+      res.redirect("/friends");
     } catch (error) {
       console.log(error);
       res.render("error/500.hbs");

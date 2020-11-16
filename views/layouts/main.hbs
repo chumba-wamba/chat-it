@@ -16,7 +16,11 @@
     {{> _header}}
     {{#if message}}
     <div class="container">
-        <div class="card-panel teal lighten-2 flash-success">{{message}}</div>
+        <div class="row">
+            <div class="col s8 offset-s2 m6 offset-m3 l8 offset-l2 card-panel teal lighten-2 white-text flash-success">
+                <p>{{message}}</p>
+            </div>
+        </div>
     </div>
     {{/if}}
     {{{body}}}
