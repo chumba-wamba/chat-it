@@ -15,17 +15,7 @@
 
 <body>
     {{> _header}}
-    {{#if message}}
-    <div class="container">
-        <div class="row">
-            <div class="col s8 offset-s2 m6 offset-m3 l8 offset-l2 card-panel teal lighten-2 white-text flash-success">
-                <p>{{message}}</p>
-            </div>
-        </div>
-    </div>
-    {{/if}}
     {{{body}}}
-    {{> _add_btn}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.14.1/ckeditor.js"
         integrity="sha256-bEIQpI72w9NJuIVhTLFUF2/8uxl0u5800r8ddViuv+o=" crossorigin="anonymous"></script>
@@ -34,6 +24,20 @@
         M.Sidenav.init(document.querySelector('.sidenav'))
         M.FormSelect.init(document.querySelector('#status'))
     </script>
+    <script>
+        const room = `{{ roomId }}`
+    </script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="../../js/chat.js"></script>
+    <script>
+        const socket = io()
+        button = document.getElementById("button")
+        button.addEventListener("click", (e) => {
+            socket.emit("button-message", room, { data: "foo", id: socket.id })
+        });
+        socket.on("button-message-response", (msg) => { console.log(msg) })
+    </script>
+
 </body>
 
 </html>

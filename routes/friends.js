@@ -1,4 +1,5 @@
 const express = require("express");
+const crypto = require("crypto");
 const { body, validationResult } = require("express-validator");
 const User = require("../models/User");
 const Room = require("../models/Room");
@@ -69,6 +70,8 @@ router.post(
       roomId = generateId();
       while (await Room.findOne({ roomId: roomId })) {
         roomId = generateId();
+        hash = crypto.createHash("sha256").update(roomId, "utf8").digest("hex");
+        console.log(hash);
       }
       newRoom = {
         userOne: req.user.userName,
