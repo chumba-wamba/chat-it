@@ -16,7 +16,7 @@
 <body>
     {{> _header}}
     {{{body}}}
-    {{!-- <button type="button" id="button">Click Me!</button> --}}
+    <button type="button" id="button">Click Me!</button>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.14.1/ckeditor.js"
         integrity="sha256-bEIQpI72w9NJuIVhTLFUF2/8uxl0u5800r8ddViuv+o=" crossorigin="anonymous"></script>
@@ -34,12 +34,13 @@
         const socket = io()
         button = document.getElementById("button")
 
-        socket.on("request-roomId", (msg) => { console.log(msg), socket.emit("roomId", room, `${room}`) })
+        socket.on("roomId-request", (msg) => { console.log(msg), socket.emit("roomId-response", room, "roomId sent") })
 
         button.addEventListener("click", (e) => {
-            socket.emit("button-message", room, { data: "foo", id: socket.id })
+            socket.emit("chat-message", room, { data: "Can I habe a random number, pls uwu", id: socket.id })
         });
-        socket.on("button-message-response", (msg) => { console.log(msg) })
+
+        socket.on("chat-message-response", (msg) => { console.log(`Message recieved - ${msg}`) })   
     </script>
 
 </body>

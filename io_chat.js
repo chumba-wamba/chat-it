@@ -1,22 +1,27 @@
 module.exports = {
   socketServer: (io) => {
     io.on("connection", (socket) => {
-      socket.emit("request-roomId", { data: "request room id", id: socket.id });
+      socket.emit("roomId-request", `Requesting roomId for ${socket.id}`);
 
-      socket.on("roomId", (room, msg) => {
+      socket.on("roomId-response", (room, msg) => {
         socket.join(room);
-        console.log(room);
+        console.log(`Room id for ${socket.id} id: ${room}`);
       });
 
-      socket.on("button-message", (room, msg) => {
-        socket.join(room);
-        console.log(room);
-        console.log(msg);
-        socket.to(room).broadcast.emit("button-message-response", {
-          data: "bar",
-          id: socket.id,
-        });
+      socket.on("chat-message", (room, msg) => {
+        console.log(`Message recieved - ${JSON.stringify(msg)}`);
+        socket.to(room).broadcast.emit(
+          "chat-message-response",
+          JSON.stringify({
+            randomNumber: Math.random(),
+            id: socket.id,
+          })
+        );
       });
+
+      socket.on("disconnect", (socket) =>
+        console.log("User Disconnected from room.")
+      );
     });
   },
 };
