@@ -1,3 +1,5 @@
+const { generateKeyPair } = require("crypto");
+
 module.exports = {
   generateId: (length = 6) => {
     var result = "";

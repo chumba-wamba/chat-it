@@ -23,6 +23,7 @@ router.get("/:roomId", checkAuthenticated, async (req, res) => {
     layout: "chat.hbs",
     fileName: "chat",
     roomId: roomId,
+    userName: req.user.userName,
     friendName: friendName,
   });
 });

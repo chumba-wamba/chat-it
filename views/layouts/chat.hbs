@@ -16,7 +16,6 @@
 <body>
     {{> _header}}
     {{{body}}}
-    <button type="button" id="button">Click Me!</button>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.14.1/ckeditor.js"
         integrity="sha256-bEIQpI72w9NJuIVhTLFUF2/8uxl0u5800r8ddViuv+o=" crossorigin="anonymous"></script>
@@ -26,22 +25,12 @@
         M.FormSelect.init(document.querySelector('#status'))
     </script>
     <script>
-        const room = `{{ roomId }}`
+        const roomId = `{{ roomId }}`
+        const userName = `{{ userName }}`
+        const friendName = `{{ friendName }}`
     </script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="../../js/chat.js"></script>
-    <script>
-        const socket = io()
-        button = document.getElementById("button")
-
-        socket.on("roomId-request", (msg) => { console.log(msg), socket.emit("roomId-response", room, "roomId sent") })
-
-        button.addEventListener("click", (e) => {
-            socket.emit("chat-message", room, { data: "Can I habe a random number, pls uwu", id: socket.id })
-        });
-
-        socket.on("chat-message-response", (msg) => { console.log(`Message recieved - ${msg}`) })   
-    </script>
 
 </body>
 

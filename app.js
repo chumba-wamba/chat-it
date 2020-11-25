@@ -6,17 +6,21 @@ const express = require("express");
 const session = require("express-session");
 const exphbs = require("express-handlebars");
 const mongoose = require("mongoose");
+const redis = require("redis");
 const dotenv = require("dotenv");
 const passport = require("passport");
 const morgan = require("morgan");
 const flash = require("connect-flash");
 const { socketServer } = require("./io_chat");
-var io = require("socket.io");
+let io = require("socket.io");
 const MongoStore = require("connect-mongo")(session);
+const RedisStore = require("connect-redis")(session);
 const { ifEquals } = require("./helpers/handlebars");
 
 const connectDB = require("./config/database");
 const User = require("./models/User");
+
+const redisClient = redis.createClient();
 
 // loading configuration file from path
 // "./config/config.env" to access environment
@@ -85,7 +89,8 @@ app.use(
     secret: "keyboard cat",
     resave: false,
     saveUninitialized: false,
-    store: new MongoStore({ mongooseConnection: mongoose.connection }),
+    // store: new MongoStore({ mongooseConnection: mongoose.connection }),
+    store: new RedisStore({ client: redisClient }),
   })
 );
 
