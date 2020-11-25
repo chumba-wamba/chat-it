@@ -1,4 +1,5 @@
 .vscode
+.VSCodeCounter
 node_modules
 config/config.env
 playground.js
