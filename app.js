@@ -15,7 +15,11 @@ const { socketServer } = require("./io_chat");
 let io = require("socket.io");
 const MongoStore = require("connect-mongo")(session);
 const RedisStore = require("connect-redis")(session);
-const { ifEquals } = require("./helpers/handlebars");
+const {
+  ifEquals,
+  publicEncrypt,
+  privateDecrypt,
+} = require("./helpers/handlebars");
 
 const connectDB = require("./config/database");
 const User = require("./models/User");
@@ -76,7 +80,7 @@ if (NODE_ENV === "development") {
 app.engine(
   ".hbs",
   exphbs({
-    helpers: { ifEquals },
+    helpers: { ifEquals, publicEncrypt, privateDecrypt },
     defaultLayout: "main.hbs",
     extname: ".hbs",
   })

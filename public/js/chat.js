@@ -1,11 +1,12 @@
 const socket = io();
 button = document.getElementById("send-button");
 input = document.getElementById("message-input");
+chatContainer = document.getElementById("chat-container");
 var privateKey;
 
 socket.on("info-request", (msg) => {
-  console.log(msg),
-    socket.emit("info-response", { roomId: roomId, userName: userName });
+  // console.log(msg),
+  socket.emit("info-response", { roomId: roomId, userName: userName });
 });
 
 socket.on("private-key-emit", (key) => {
@@ -16,7 +17,7 @@ socket.on("private-key-emit", (key) => {
 
 button.addEventListener("click", (e) => {
   e.preventDefault();
-  console.log(input.value);
+  // console.log(input.value);
   if (input) {
     socket.emit("public-key-request", roomId, friendName);
     socket.on("public-key-response", (key) => {
@@ -24,14 +25,21 @@ button.addEventListener("click", (e) => {
     });
 
     socket.emit("chat-message", roomId, {
-      chatMessage: `${userName} => ${input.value}`,
+      message: `${userName} => ${input.value}`,
       id: socket.id,
     });
-
+    var tag = document.createElement("p");
+    var text = document.createTextNode(`${userName} => ${input.value}`);
+    tag.appendChild(text);
+    chatContainer.appendChild(tag);
     input.value = "";
   }
 });
 
 socket.on("chat-message-broadcast", (msg) => {
-  console.log(`Message recieved - ${msg}`);
+  // console.log(`message recieved - ${msg}`);
+  var tag = document.createElement("p");
+  var text = document.createTextNode(JSON.parse(msg).message);
+  tag.appendChild(text);
+  chatContainer.appendChild(tag);
 });

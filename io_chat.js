@@ -29,7 +29,7 @@ module.exports = {
           },
         });
 
-        console.log(`Added public key for ${userName}`);
+        console.log(`added public key for ${userName}`);
         redisClient.set(userName, publicKey);
         socket.emit("private-key-emit", privateKey);
       });
@@ -39,7 +39,7 @@ module.exports = {
         socket.to(roomId).broadcast.emit(
           "chat-message-broadcast",
           JSON.stringify({
-            message: msg.chatMessage,
+            message: msg.message,
             id: socket.id,
           })
         );
